@@ -39,11 +39,16 @@ DEST_DIR="/Destination/Directory/Here"
 
 
 #############################################
-SETTING_FILE="setting.db"
-TEMP_KEY="input.key"
-USER_FILE="user.cfg"
-OPTION_FILE="option.cfg"
+CONFIG_DIR="/root/.hstrans"
+SETTING_FILE="${CONFIG_DIR}/setting.db"
+TEMP_KEY="${CONFIG_DIR}/input.key"
+USER_FILE="${CONFIG_DIR}/user.cfg"
+OPTION_FILE="${CONFIG_DIR}/option.cfg"
 #############################################
+
+if [ ! -d "${CONFIG_DIR}" ]; then
+        mkdir -p "${CONFIG_DIR}";
+fi
 
 function do_exit () {
         echo -e ""
