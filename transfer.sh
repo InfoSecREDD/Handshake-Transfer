@@ -13,10 +13,10 @@
 HANDSHAKE_DIR="/root/hs"
 
 # For AUTO_MODE to work, SSH/Email/DEST_DIR needs to be set correctly.
-#   (RECOMMENDED: Run the script 1st before setting AUTO_MODE to 1.
+#   (RECOMMENDED: Run the script 1st before setting AUTO_MODE or ANY AUTO to 1. )
 AUTO_MODE="0"
 AUTO_OHC="0"
-
+AUTO_SSH="0"
 
 # OnlineHashCrack Settings
 #############################################
@@ -63,6 +63,15 @@ if [ ${#TOTAL_FILES[@]} -eq 0 ]; then
         do_exit;
 fi
 
+if [ "${AUTO_SSH}" == "1" ]; then
+        if [ ! -f "${SETTING_FILE}" ] && [ ! -f "${USER_FILE}" ]; then
+                if [ "${USER}" == "" ] && [ "${PASS}" == "" ]; then
+                        echo -e "Please set the SSH Variables or run first with AUTO_SSH off.";
+                        do_exit;
+                fi
+        fi
+fi
+
 if [ "${AUTO_MODE}" == "1" ]; then
         STRING="Please make sure all variables needed for AUTO MODE are set."
         if [ "${HOST}" == "XXX.XXX.XXX.XXX" ] || [ "${HOST}" == "" ]; then
@@ -102,9 +111,12 @@ function setup_settings_file () {
         echo -e "(All your data is saved LOCALLY.)"
         read -p "Enter your SSH Username: " INPUT_USER
         echo -e "${INPUT_USER}" > ${USER_FILE}
-        echo -e "(Passwords are not saved in Plain Text Format.)"
+        echo -e "(Passwords are NOT saved in Plain Text Format.)"
         read -p "Enter your SSH Password: " INPUT_PASS
         echo -e "${INPUT_PASS}" | base64 > ${TEMP_KEY} && base64 ${TEMP_KEY} > ${SETTING_FILE}
+        SHOW_ENC=$(cat ${SETTING_FILE})
+        echo -e "  -> Encrypted input to: ${SHOW_ENC}"
+        echo -e ""
         rm ${TEMP_KEY}
 }
 
@@ -116,13 +128,13 @@ function auto_ohc () {
                 fi
                 for i in ${FILES}; do
                 curl -X POST -F "email=${EMAIL}" -F "file=@/${i}" https://api.onlinehashcrack.com;
-                echo "--> Submitted ${i} to onlinehashcrack.com API!";
+                echo "--> Successfully submitted ${i} to OnlineHashCrack.com API!";
                 done
         elif [ "${AUTO_OHC}" == "0" ]; then
                 read -p "What email address do you want to associate with Onlinehashcrack.com? " EMAIL
                 for i in ${FILES}; do
                 curl -X POST -F "email=${EMAIL}" -F "file=@/${i}" https://api.onlinehashcrack.com;
-                echo "--> Submitted ${i} to onlinehashcrack.com API!";
+                echo "--> Successfully submitted ${i} to OnlineHashCrack.com API!";
                 done
         fi
         do_exit
@@ -132,11 +144,11 @@ function do_confirm_ohc () {
         if [ "${AUTO_OHC}" == "1" ]; then
                 auto_ohc;
         fi
-        read -p "Do you want to upload files to Onlinehashcrack.com? " CONFIRM
+        read -p "Do you want to upload handshake files to OnlineHashCrack.com? " CONFIRM
         case "$CONFIRM" in
         y|Y ) auto_ohc;;
         n|N ) do_exit;;
-        * ) echo "Please choose Yes or No. (y/n) " && do_confirm_ohc;;
+        * ) echo "Please choose Yes or No. (y/n)" && do_confirm_ohc;;
     esac
 }
 
