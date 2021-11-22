@@ -34,7 +34,7 @@ HOST="XXX.XXX.XXX.XXX"
 USER=""
 PASS=""
 # Files to send to Remote Host.
-FILES=$(find ${HANDSHAKE_DIR} -type f -name '*.pcap' -o -name '*.cap' -o -name '*.22000')
+FILES=$(find ${HANDSHAKE_DIR} -type f -name '*.pcap' -o -name '*.cap')
 DEST_DIR="/Destination/Directory/Here"
 
 
