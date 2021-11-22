@@ -89,9 +89,11 @@ if [ "${AUTO_MODE}" == "1" ]; then
                         do_exit;
                 fi
         fi
-        if [ "${EMAIL}" == "" ]; then
-                echo -e "${STRING}"
-                do_exit;
+        if [ "${OHC}" == "1" ]; then
+                if [ "${EMAIL}" == "" ]; then
+                        echo -e "${STRING}"
+                        do_exit;
+                fi
         fi
 fi
 
