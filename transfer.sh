@@ -136,7 +136,13 @@ function auto_ohc () {
                 echo "--> Successfully submitted ${i} to OnlineHashCrack.com API!";
                 done
         elif [ "${AUTO_OHC}" == "0" ]; then
-                read -p "What email address do you want to associate with Onlinehashcrack.com? " EMAIL
+                if [ "${EMAIL}" == "" ]; then
+                        read -p "What email address do you want to associate with OnlineHashCrack.com? " EMAIL
+                        if [ "${EMAIL}" == "" ]; then
+                                echo -e "Email can not be blank. Exiting..";
+                                do_exit;
+                        fi
+                fi
                 for i in ${FILES}; do
                 curl -X POST -F "email=${EMAIL}" -F "file=@/${i}" https://api.onlinehashcrack.com;
                 echo "--> Successfully submitted ${i} to OnlineHashCrack.com API!";
