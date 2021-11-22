@@ -69,9 +69,11 @@ if [ "${AUTO_MODE}" == "1" ]; then
                 echo -e "${STRING}"
                 do_exit;
         fi
-        if [ ! -f "${SETTING_FILE}" ] || [ ! -f "${OPTION_FILE}" ]; then
-                echo -e "${STRING}"
-                do_exit;
+        if [ "${USER}" == "" ] || [ "${PASS}" == "" ]; then
+                if [ ! -f "${SETTING_FILE}" ] || [ ! -f "${USER_FILE}" ]; then
+                        echo -e "${STRING}"
+                        do_exit;
+                fi
         fi
         if [ "${EMAIL}" == "" ]; then
                 echo -e "${STRING}"
